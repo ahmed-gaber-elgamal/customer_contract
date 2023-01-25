@@ -7,9 +7,9 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
-                    <page groups="customer_contract.group_customer_contract_user" name="customer_contract" string="Customer Contract">
+                    <page name="customer_contract" string="Customer Contract" groups="customer_contract.group_customer_contract_user">
                         <group>
-                            <field name="total_contracts_price"/>
+                            <field name="total_contracts_price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
                     </page>
                 </xpath>

@@ -12,8 +12,9 @@ class CustomerContract(models.Model):
                                  tracking=True)
     start_date = fields.Date(required=True, tracking=True)
     end_date = fields.Date(required=True, tracking=True)
-    price = fields.Float(required=True, tracking=True)
-    average_day_price = fields.Float(compute='compute_average_day_price', store=True)
+    currency_id = fields.Many2one('res.currency', required=True, default=lambda self: self.env.company.currency_id.id)
+    price = fields.Monetary(required=True, tracking=True)
+    average_day_price = fields.Monetary(compute='compute_average_day_price', store=True)
     state = fields.Selection(selection=[
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
@@ -26,6 +27,13 @@ class CustomerContract(models.Model):
     _sql_constraints = [
         ('date_check', "CHECK (start_date <= end_date)", "The start date must be anterior to the end date."),
     ]
+
+    def name_get(self):
+        result = []
+        for contract in self:
+            name = contract.partner_id.name + "'s Contract" or ''
+            result.append((contract.id, name))
+        return result
 
     @api.onchange('start_date')
     def onchange_start_date(self):
