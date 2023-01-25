@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="customer_contract_view_tree" model="ir.ui.view">
+            <field name="name">customer_contract_view_tree</field>
+            <field name="model">customer.contract</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="partner_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="price"/>
+                    <field name="average_day_price"/>
+                    <field name="status_last_change_uid"/>
+                    <field name="state" widget="badge"
+                           decoration-success="state == 'confirmed'"
+                           decoration-info="state == 'ended'"
+                           decoration-muted="state == 'draft'"
+                           decoration-danger="state == 'cancelled'"/>
+                </tree>
+            </field>
+        </record>
+        <record id="customer_contract_view_form" model="ir.ui.view">
+            <field name="name">customer_contract_view_form</field>
+            <field name="model">customer.contract</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="button_confirm" type="object" string="Confirm" class="oe_highlight" states="draft"/>
+                        <button name="button_cancel" type="object" string="Cancel" states="confirmed"/>
+                        <button name="button_draft" type="object" string="Reset to Draft" states="cancelled"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,ended"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="partner_id" class="oe_edit_only"/>
+                            <h1>
+                                <field name="partner_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="start_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="price" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="status_last_change_uid"/>
+                            </group>
+                            <group>
+                                <field name="end_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="average_day_price"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="customer_contract_action" model="ir.actions.act_window">
+            <field name="name">Customer Contracts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">customer.contract</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="customer_contract_menu" name="Customer Contracts" action="customer_contract_action" sequence="50"
+                  groups="customer_contract.group_customer_contract_user"/>
+    </data>
+</odoo>
