@@ -11,5 +11,5 @@ class Partner(models.Model):
         total prices of the “confirmed” contracts for this customer.
         """
         for rec in self:
-            contracts = self.env['customer.contract'].search([('partner_id', '=', rec.id), ('state', '=', 'confirmed')])
+            contracts = self.env['customer.contract'].sudo().search([('partner_id', '=', rec.id), ('state', '=', 'confirmed')])
             rec.total_contracts_price = sum(contracts.mapped('price'))
